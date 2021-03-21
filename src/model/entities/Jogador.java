@@ -1,6 +1,6 @@
 package model.entities;
 
-public class Jogador {
+public class Jogador { 
 	
 	private String jogador;
 	private Integer pontos; 
@@ -12,12 +12,12 @@ public class Jogador {
 		this.pontos = pontos;
 	}
 
-	public String getJogador1() {
+	public String getJogador() {
 		return jogador;
 	}
 
-	public void setJogador1(String jogador1) {
-		this.jogador = jogador1;
+	public void setJogador(String jogador) {
+		this.jogador = jogador;
 	}
 
 	public Integer getPontos() {
@@ -28,8 +28,15 @@ public class Jogador {
 		this.pontos = pontos;
 	}
 	
-	@Override
-	public String toString() {
-		return "";				
+	/*
+	 * Soma um ponto a mais para o jogador ganhador da rodada.
+	 */
+	public Integer somaPontos() {
+		return pontos += 1;
 	}
+	
+	public String toString() {
+		return getJogador() + " tem " + getPontos() + " pontos.";
+	}
+
 }

@@ -2,76 +2,158 @@ package model.entities;
 
 import java.util.Arrays;
 
-public class JogoDaVelha extends Jogador{
-	
-	private Integer tamanhoTabuleiro;
-	String[][] tabuleiro = new String[3][3];
-	
+import model.exceptions.DomainException;
+
+public class JogoDaVelha {
+
+	private int tamanhoTabuleiro;
+
+	String[][] tabuleiro;
+
 	public JogoDaVelha() {}
 
-	public JogoDaVelha(Integer tamanhoTabuleiro) {
+	public JogoDaVelha(int tamanhoTabuleiro) {
 		this.tamanhoTabuleiro = tamanhoTabuleiro;
 	}
-
-	public Integer getTamanhoTabuleiro() {
+	
+	public int getTamanhoTabuleiro() {
 		return tamanhoTabuleiro;
 	}
 
-	public void setTamanhoTabuleiro(Integer tamanhoTabuleiro) {
-		//Preenche os campos do array para não ficar nulos
+	/*
+	 * Vai formatar o tabuleiro zerado de acordo com o tamanho
+	 * escolhido pelo usuário
+	 */
+	public void setTamanhoTabuleiro(int tamanhoTabuleiro) {
 		this.tamanhoTabuleiro = tamanhoTabuleiro;
-			for (int i = 0; i < tabuleiro.length ; i++) {
-	            for (int j = 0; j < tabuleiro.length; j++) {
-	                tabuleiro[i][j] = "-";
-	            }
-			}	
-	}
-	
-	public void realizaJogada(String caractere, Integer linha, Integer coluna) {			
-		if(tabuleiro[linha][coluna] != "X" && tabuleiro[linha][coluna] != "O") {
-			tabuleiro[linha][coluna] = caractere;	
-			if(verificaGanhador() == true) {
-				System.out.println(verificaGanhador());		
+		tabuleiro = new String[tamanhoTabuleiro][tamanhoTabuleiro];
+		for (int i = 0; i < tabuleiro.length ; i++) {
+			for (int j = 0; j < tabuleiro.length; j++) {
+				tabuleiro[i][j] = "-";
 			}
+		}	
+	}
+
+	/*
+	 * Recebe os comando de linha e coluna
+	 * realiza as jogadas.
+	 */
+	public void realizaJogada(String caractere, int linha, int coluna) {			
+		if(tabuleiro[linha][coluna] != "X" && tabuleiro[linha][coluna] != "O") {
+			tabuleiro[linha][coluna] = caractere;
 		}
 		else {
 			System.out.println();
-			System.out.println("*ATENÇÃO: posição inválida, escolha outra*");
+			throw new DomainException("Posição inválida, tente novamente: ");
 		}
 	}
-	
+
+	/*
+	 * A cada rodada o método é chamado e vai verificar se há um ganhador.
+	 */
 	public boolean verificaGanhador() {
-		if(tabuleiro[0][0] == "X" && tabuleiro[0][1] == "X" && tabuleiro[0][2] == "X" ||
-				tabuleiro[0][0] == "O" && tabuleiro[0][1] == "O" && tabuleiro[0][2] == "O") {
-			return true;
+		int acertos = 0;
+		int y = tamanhoTabuleiro;
+		int z = tamanhoTabuleiro;
+
+		/*
+		 * Testa todas as linhas horizontalmente
+		 */
+		for(int i = 0; i < tabuleiro.length; i ++) {
+			for(int j = 0; j <tabuleiro.length; j++) {
+				if(tabuleiro[i][j] == "X") {
+					acertos++;
+				}
+			}
+			if(acertos == tabuleiro.length) {
+				return true;
+			}else {
+				acertos = 0;
+			}			
+		}		
+		for(int i = 0; i < tabuleiro.length; i ++) {
+			for(int j = 0; j <tabuleiro.length; j++) {
+				if(tabuleiro[i][j] == "O") {
+					acertos++;
+				}
+			}
+			if(acertos == tabuleiro.length) {
+				return true;
+			}else {
+				acertos = 0;
+			}			
+		}		
+		/*
+		 * Testa todas as linhas verticalmente
+		 */
+		for(int i = 0; i < tabuleiro.length; i ++) {
+			for(int j = 0; j <tabuleiro.length; j++) {
+				if(tabuleiro[j][i] == "X") {
+					acertos++;
+				}
+			}
+			if(acertos == tabuleiro.length) {
+				return true;
+			}else {
+				acertos = 0;
+			}			
+		}		
+		for(int i = 0; i < tabuleiro.length; i ++) {
+			for(int j = 0; j <tabuleiro.length; j++) {
+				if(tabuleiro[j][i] == "O") {
+					acertos++;
+				}
+			}
+			if(acertos == tabuleiro.length) {
+				return true;
+			}else {
+				acertos = 0;
+			}			
+		}	
+		/*
+		 * Testa as diagonais
+		 */
+		for(int i = 0; i < tabuleiro.length; i ++) {
+			if(tabuleiro[i][i] == "X") {
+				acertos++;
+			}
 		}
-		if(tabuleiro[1][0] == "X" && tabuleiro[1][1] == "X" && tabuleiro[1][2] == "X" ||
-				tabuleiro[1][0] == "O" && tabuleiro[1][1] == "O" && tabuleiro[1][2] == "O") {
+		if(acertos == tabuleiro.length) {
 			return true;
+		}else {
+			acertos = 0;
+		}	
+		for(int i = 0; i < tabuleiro.length; i ++) {
+			if(tabuleiro[i][i] == "O") {
+				acertos++;
+			}
 		}
-		if(tabuleiro[2][0] == "X" && tabuleiro[2][1] == "X" && tabuleiro[2][2] == "X" ||
-				tabuleiro[2][0] == "O" && tabuleiro[2][1] == "O" && tabuleiro[2][2] == "O") {
+		if(acertos == tabuleiro.length) {
 			return true;
+		}else {
+			acertos = 0;
+		}	
+		for(int i = 0; i < tabuleiro.length; i++) {
+			y -= 1;
+			if(tabuleiro[y][i] == "X") {
+				acertos++;
+			}
 		}
-		if(tabuleiro[0][0] == "X" && tabuleiro[1][0] == "X" && tabuleiro[2][0] == "X" ||
-				tabuleiro[0][0] == "O" && tabuleiro[1][0] == "O" && tabuleiro[2][0] == "O") {
+		if(acertos == tabuleiro.length) {
 			return true;
+		}else {
+			acertos = 0;
 		}
-		if(tabuleiro[0][1] == "X" && tabuleiro[1][1] == "X" && tabuleiro[2][1] == "X" ||
-				tabuleiro[0][1] == "O" && tabuleiro[1][1] == "O" && tabuleiro[2][1] == "O") {
-			return true;
+		for(int i = 0; i < tabuleiro.length; i++) {
+			z -= 1;
+			if(tabuleiro[z][i] == "O") {
+				acertos++;
+			}
 		}
-		if(tabuleiro[0][2] == "X" && tabuleiro[1][2] == "X" && tabuleiro[2][2] == "X" ||
-				tabuleiro[0][2] == "O" && tabuleiro[1][2] == "O" && tabuleiro[2][2] == "O") {
+		if(acertos == tabuleiro.length) {
 			return true;
-		}
-		if(tabuleiro[0][0] == "X" && tabuleiro[1][1] == "X" && tabuleiro[2][2] == "X" ||
-				tabuleiro[0][0] == "O" && tabuleiro[1][1] == "O" && tabuleiro[2][2] == "O") {
-			return true;
-		}
-		if(tabuleiro[0][2] == "X" && tabuleiro[1][1] == "X" && tabuleiro[2][0] == "X" ||
-				tabuleiro[0][2] == "O" && tabuleiro[1][1] == "O" && tabuleiro[2][0] == "O") {
-			return true;
+		}else {
+			acertos = 0;
 		}
 		return false;
 	}
@@ -85,5 +167,4 @@ public class JogoDaVelha extends Jogador{
 		}
 		return Arrays.toString(tabuleiro);
 	}
-
 }
